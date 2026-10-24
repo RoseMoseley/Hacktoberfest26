@@ -1,4 +1,5 @@
 import pygame
+from copy import copy
 
 '''
 main display -> pygame screen
@@ -41,9 +42,43 @@ class Display():
 
         self.known_items = initial # list of all items that have been discovered
         self.placed_items = []
+        self.current_dragged_item = None
+        self.holding_left_click = False
 
-        clear = lambda x : []
-        self.buttons = [Button(5,5,"Clear",clear)]
+        self.buttons = [Button(5,5,"Clear",lambda btn: self.clearItems())]
+        for num, item_name in enumerate(self.known_items):
+            test = item_name
+            self.buttons.append(Button(self.screen.get_size()[0]-100, num*20+5, item_name, lambda btn: self.add_item(btn.getItemName())))
+
+    def clearItems(self):
+        self.placed_items = []
+
+    def doLogic(self):
+        '''
+        This processes the logic of the game
+        '''
+        mousePos = pygame.mouse.get_pos()
+        click = False
+        if pygame.mouse.get_pressed()[0] and not self.holding_left_click:
+            self.holding_left_click = True
+            click = True
+        elif not pygame.mouse.get_pressed()[0] and self.holding_left_click:
+            self.holding_left_click = False
+        if click:
+            if self.current_dragged_item is None:
+                for button in self.buttons:
+                    if button.isPointOverlappingObj(mousePos):
+                        print(f"CLICKED {button.getItemName()}")
+                        button.getAction()(button)
+                        return # Upon pressing a button ignore the rest of the logic to prevent issues
+                for item in self.placed_items:
+                    if item.isPointOverlappingObj(mousePos):
+                        self.current_dragged_item = item
+                        break
+            else:
+                self.current_dragged_item = None # TODO: if overlapping with another item when released merge with it
+        if self.current_dragged_item is not None:
+            self.current_dragged_item.setPos(mousePos[0], mousePos[1])
 
     def updateAll(self):
         '''
@@ -53,14 +88,15 @@ class Display():
         for item in self.placed_items:
             item.drawItem(self.screen)
 
-        for num, item_name in enumerate(self.known_items):
-            item = Item(self.screen.get_size()[0]-100, num*20+5, item_name)
-            item.drawItem(self.screen)
-
         for button in self.buttons:
             button.drawItem(self.screen)
 
         pygame.display.update()
+
+    def add_item(self, item_name):
+        new_item = Item(0, 0, item_name)
+        self.placed_items.append(new_item)
+        self.current_dragged_item = new_item
 
 class Object():
     def __init__(self, pos_x: int, pos_y: int, item_name: str):
@@ -75,9 +111,13 @@ class Object():
 
     def getPos(self) -> tuple[int, int]:
         '''
-        Return a tuple of this item's position (x, y), this is the centre of the text 
+        Return a tuple of this item's position (x, y), this is the topleft of the text 
         '''
         return (self.__x, self.__y)
+
+    def setPos(self, pos_x: int, pos_y: int):
+        self.__x = pos_x
+        self.__y = pos_y
 
     def getItemName(self) -> str:
         '''
@@ -98,30 +138,33 @@ class Object():
         self.__textRect.topleft = (self.__x, self.__y)
         win.blit(self.__textRender, self.__textRect)
 
+    def isObjOverlappingObj(self, otherItem) -> bool:
+            '''
+            Given another object, determins if the items are overlapping or not
+            '''
+            otherX, otherY = otherItem.getPos()
+            otherWidth, otherHeight = otherItem.getBounds()
+            xOverlap = self.__x+self.__width >= otherX and otherX+otherWidth >= self.__x
+            yOverlap = self.__y+self.__height >= otherY and otherY+otherHeight >= self.__y
+            return xOverlap and yOverlap 
+    
+    def isPointOverlappingObj(self, point: tuple[int, int]) -> bool:
+        '''
+        Returns if a point is overlapping the item (this should be used for checking if the mouse is on an item)
+        '''
+        xOverlap = point[0]>=self.__x and point[0]<=self.__x+self.__width
+        yOverlap = point[1]>=self.__y and point[1]<=self.__y+self.__height
+        return xOverlap and yOverlap
+
 class Item(Object):
     def __init__(self, pos_x, pos_y, item_name):
         super().__init__(pos_x, pos_y, item_name)
 
-    def isItemOverlappingItem(self, otherItem) -> bool:
-        '''
-        Given another item, determins if the items are overlapping or not
-        '''
-        otherX, otherY = otherItem.getPos()
-        otherWidth, otherHeight = otherItem.getBounds()
-        xOverlap = self.__x+self.__width//2 >= otherX-otherWidth//2 and otherX+otherWidth//2 >= self.__x-self.__width//2
-        yOverlap = self.__y+self.__height//2 >= otherY-otherHeight//2 and otherY+otherHeight//2 >= self.__y-self.__height//2
-        return xOverlap and yOverlap 
-
-    def isPointOverlappingItem(self, point: tuple[int, int]) -> bool:
-        '''
-        Returns if a point is overlapping the item (this should be used for checking if the mouse is on an item)
-        '''
-        xOverlap = point[0]>=self.__x-self.__width//2 and point[0]<=self.__x+self.__width//2
-        yOverlap = point[1]>=self.__y-self.__height//2 and point[1]<=self.__y+self.__height//2
-        return xOverlap and yOverlap
-
 class Button(Object):
     def __init__(self, pos_x, pos_y, item_name, action):
+        '''
+        action: any function that takes a single argument which is the button that was pressed
+        '''
         super().__init__(pos_x, pos_y, item_name)
         self.__action = action
 
