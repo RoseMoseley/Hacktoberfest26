@@ -39,15 +39,16 @@ class display():
         self.known_items = initial # list of all items that have been discovered
         self.placed_items = []
 
-    def update_all(self):
+    def updateAll(self):
         '''
         redraw the entier screen and run pygame.display.update
         '''
         self.screen.fill(self.colours["bg"])
-        for p_item in self.placed_items:
-            self.screen.blit(p_item.get_screen(), p_item.get_location()) # update to matching getters
+        for item in self.placed_items:
+            item.drawItem(self.screen)
 
-        for num, k_item in enumerate(self.known_items):
-            this_item = item.init()
+        for num, item_name in enumerate(self.known_items):
+            item = Item.init(self.screen.get_size()[0]-100, num*20+5, item_name)
+            item.drawItem(self.screen)
 
         pygame.display.update()
