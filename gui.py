@@ -161,16 +161,16 @@ class Display():
             item.drawItem(self.screen)
 
         for num, button in enumerate(self.known_items):
-            button.setPos(self.screen.get_size()[0]-SIDEBARSIZE+5, (num-self.__scroll_count)*self.__known_item_spacing+5)
+            button.setPos(self.screen.get_size()[0]-10-SCROLLBARSIZE, (num-self.__scroll_count)*self.__known_item_spacing+5)
             button.drawItem(self.screen)
 
         for button in self.buttons:
             button.drawItem(self.screen)
 
         self.goalFont.set_strikethrough(self.hasGoal)
-        render = self.goalFont.render(self.goal, True, COLOURS["txt"])
+        render = self.goalFont.render("Goal: " + self.goal, True, COLOURS["txt"])
         render_rect = render.get_rect()
-        render_rect.bottomleft = (0, self.screen.get_size()[1])
+        render_rect.bottomleft = (5, self.screen.get_size()[1]-5)
         self.screen.blit(render, render_rect)
 
         pygame.draw.rect(self.screen, COLOURS["out"], self.__scroll_bar_rect)
