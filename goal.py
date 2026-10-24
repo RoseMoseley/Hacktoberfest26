@@ -18,8 +18,13 @@ def get_goal(option_size:int,recursive_count:int,all_words:list[str])->tuple[lis
     new_item = ""
     path: str = current_item
     for i in range(recursive_count):
+        count = 0
         choice = random.choice(used_items)
-        new_item = merger.merge_items(current_item,choice)
+        new_item = merger.merge_items(current_item, choice)
+        while new_item in used_items and count < 50:
+            choice = random.choice(used_items)
+            new_item = merger.merge_items(current_item,choice)
+            count += 1
         path = f"{path} + {choice} = {new_item}"
         current_item = new_item
         used_items.append(current_item)
