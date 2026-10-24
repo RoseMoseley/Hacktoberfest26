@@ -36,10 +36,13 @@ class display():
         #init pygame
         pygame.init()
         pygame.display.init()
+        pygame.font.init()
         self.screen = pygame.display.set_mode(size=(1028,512))
 
         self.known_items = initial # list of all items that have been discovered
         self.placed_items = []
+
+        self.buttons = []
 
     def updateAll(self):
         '''
@@ -108,3 +111,31 @@ class Item:
         '''
         self.__textRect.center = (self.__x, self.__y)
         win.blit(self.__textRender, self.__textRect)
+
+class Button():
+    def __init__(self, pos_x: int, pos_y: int, item_name: str, action:function):
+        self.__x: int = pos_x
+        self.__y: int = pos_y
+        self.__item_name: str = item_name
+        self.__font = pygame.font.Font("freesansbold.ttf", 32)
+        self.__textRender = self.__font.render(self.__item_name, True, (0, 0, 0), (255, 255, 255))
+        self.__textRect = self.__textRender.get_rect()
+        self.__width = self.__textRect.width
+        self.__height = self.__textRect.height
+        self.__action = action
+
+    def getPos(self) -> tuple[int, int]:
+        return (self.__x, self.__y)
+
+    def getItemName(self) -> str:
+        return self.__item_name
+
+    def getBounds(self) -> tuple[int, int]:
+        return (self.__width, self.__height)
+
+    def drawItem(self, win: pygame.Surface):
+        self.__textRect.center = (self.__x, self.__y)
+        win.blit(self.__textRender, self.__textRect)
+
+    def getAction(self):
+        return self.__action
