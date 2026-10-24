@@ -20,7 +20,7 @@ def get_chat(message:str)->str:
     :param message: the words you send to AI
     :return: The response returns by AI
     '''
-    return str(_chat(message).message.content)
+    return str(_chat(message).message.content).lower()
 def print_chat(message:str)->str:
     '''
     simular with get_chat(), but print the response to console

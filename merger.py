@@ -46,15 +46,3 @@ def add_merge(mergable1: str, mergable2:str, output:str) -> None:
     known_items.append(output)
 
     known_merges[mergable2][mergable1] = output
-
-def save_merges_to_file(file_path: str) -> None:
-    global known_merges, known_items
-    with open(file_path, "w") as file:
-        json.dump({"merges": known_merges, "known_items": known_items}, file)
-
-def load_merges_from_file(file_path: str) -> None:
-    global known_merges, known_items
-    with open(file_path, "r") as file:
-        data = json.load(file)
-        known_merges = data["merges"]
-        known_items = data["known_items"]

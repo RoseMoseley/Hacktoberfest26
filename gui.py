@@ -91,7 +91,13 @@ class Display():
         '''
         This processes the logic of the game
         '''
-        self.__scroll_bar_rect = pygame.Rect(self.screen.get_size()[0]-SCROLLBARSIZE, (self.screen.get_size()[1]-5)*self.__scroll_count/(len(self.known_items) - self.screen.get_size()[1] // self.__known_item_spacing), SCROLLBARSIZE, min(max(self.screen.get_size()[1]/(len(self.known_items)*self.__known_item_spacing), 5), self.screen.get_size()[1]))
+        scroll_bar_height = max(min(self.screen.get_size()[1]/(len(self.known_items)*self.__known_item_spacing), 1), 0)*self.screen.get_size()[1]
+        self.__scroll_bar_rect = pygame.Rect(
+            self.screen.get_size()[0]-SCROLLBARSIZE, 
+            (self.screen.get_size()[1]-scroll_bar_height)*self.__scroll_count/max((len(self.known_items) - self.screen.get_size()[1] // self.__known_item_spacing), 1), 
+            SCROLLBARSIZE, 
+            scroll_bar_height
+            )
 
         mousePos = pygame.mouse.get_pos()
         click = False
@@ -103,9 +109,9 @@ class Display():
         elif not pygame.mouse.get_pressed()[0] and self.holding_left_click:
             self.holding_left_click = False
             self.holding_scroll_bar = False
-        if self.holding_scroll_bar:
-            self.__scroll_bar_rect = pygame.Rect(self.__scroll_bar_rect.x, min(max(mousePos[1], 0), self.screen.get_size()[1]-5), self.__scroll_bar_rect.width, self.__scroll_bar_rect.height)
-            self.__scroll_count = (self.__scroll_bar_rect.y/(self.screen.get_size()[1]-5))*(len(self.known_items) - self.screen.get_size()[1] // self.__known_item_spacing)
+        if self.holding_scroll_bar and self.screen.get_size()[1]-self.__scroll_bar_rect.height > 0:
+            self.__scroll_bar_rect = pygame.Rect(self.__scroll_bar_rect.x, min(max(mousePos[1], 0), self.screen.get_size()[1]-self.__scroll_bar_rect.height), self.__scroll_bar_rect.width, self.__scroll_bar_rect.height)
+            self.__scroll_count = (self.__scroll_bar_rect.y/(self.screen.get_size()[1]-self.__scroll_bar_rect.height))*(len(self.known_items) - self.screen.get_size()[1] // self.__known_item_spacing)
         elif click:
             if self.current_dragged_item is None:
                 for button in self.buttons:
