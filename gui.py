@@ -16,14 +16,16 @@ item node
 
 '''
 
+#list of colours for the gui
+COLOURS = {"bg":(255,255,255)}
+
 class display():
     '''
     The main display
     
     Has a list of discorvered nodes to be able to add
     '''
-    #list of colours for the gui
-    colours = {"bg":(255,255,255)}
+
     def __init__(self, initial:list[str]):
         '''
         initialisation of the dislay object
@@ -52,8 +54,6 @@ class display():
             item.drawItem(self.screen)
 
         pygame.display.update()
-    def update(self, ): pass
-
 
 class Item:
     def __init__(self, pos_x: int, pos_y: int, item_name: str):
