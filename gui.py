@@ -148,7 +148,7 @@ class Display():
         '''
         self.screen.fill(COLOURS["bg"])
 
-        pygame.draw.rect(self.screen, COLOURS["fg2"], (self.screen.get_size()[0]-SIDEBARSIZE,0,SIDEBARSIZE,self.screen.get_size()[1]))
+        pygame.draw.rect(self.screen, COLOURS["bg3"], (self.screen.get_size()[0]-SIDEBARSIZE,0,SIDEBARSIZE,self.screen.get_size()[1]))
         
         for item in self.placed_items:
             item.drawItem(self.screen)
