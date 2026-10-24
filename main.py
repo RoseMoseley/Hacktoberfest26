@@ -9,7 +9,7 @@ def main():
     for i in range(len(lines)):
         lines[i] = lines[i].replace("\n", "")
     starting = get_goal(4,7,lines)
-    GUI = Display(starting[0], starting[2])
+    GUI = Display(starting[0], starting[1])
     running = True
     clock = pygame.time.Clock()
     while running:

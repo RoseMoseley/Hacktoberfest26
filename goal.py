@@ -9,22 +9,19 @@ def get_goal(option_size:int,recursive_count:int,all_words:list[str])->tuple[lis
     :return: tuple(list of required items, list of step to goal,goal)
     '''
     items:list[str] = []
-    item_order:list[str] = []
+    used_items:list[str] = []
     for i in range(option_size):
         items.append(random.choice(all_words))
+    used_items.extend(items)
     print(f"Goal:",end=" ")
-    for i in range(recursive_count):
-        item = random.choice(items)
-        item_order.append(item)
-        print(f"+ {item}".replace("\n",""), end=" ")
-    print("")
-    current_item = item_order[0]
+    current_item = items[0]
     new_item = ""
-    for i in range(1,len(item_order)):
-        new_item = merger.merge_items(current_item,item_order[i])
+    for i in range(recursive_count):
+        new_item = merger.merge_items(current_item,random.choice(used_items))
         current_item = new_item
+        items.append(current_item)
     print(f"items:{items}\ngoal:{current_item}\n====")
-    return items,item_order,current_item
+    return items,current_item
 if __name__ == "__main__":
     lines = []
     with open("common-words.txt", "r") as f:
