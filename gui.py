@@ -288,6 +288,20 @@ class Button(Object):
 
         win.blit(self._background, self._textRect)
 
+    def isPointOverlappingObj(self, point: tuple[int, int]) -> bool:
+        '''
+        Returns if a point is overlapping the item (this should be used for checking if the mouse is on an item)
+        '''
+        x, y = self.getPos()
+        width, height = self.getBounds()
+        if self.__alignment == "topright":
+            x -= self.getBounds()
+
+        xOverlap = point[0]>=x and point[0]<=x+width
+        yOverlap = point[1]>=y and point[1]<=y+height
+
+        return xOverlap and yOverlap
+
 if __name__ == "__main__":
     disp = Display([str(x) for x in range(100)], "0")
     disp.updateAll()
