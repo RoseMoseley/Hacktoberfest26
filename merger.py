@@ -1,25 +1,13 @@
 import json
-#from model import get_chat
+from model import get_chat
 
 # This is a nested dictionary
 # mergable_name: merges
 # mergable_name: output
 # when a new merge is added, we need to add both cases
-known_merges = {
-    "1": {
-        "1": "2",
-        "2": "3"
-    },
-    "2": {
-        "1": "3",
-        "2": "4"
-    }
-}
+known_merges = {}
 
-known_items = ["1", "2"]
-
-def get_chat(input):
-    return "test"
+known_items = []
 
 def merge_items(mergable1: str, mergable2: str) -> str:
     '''
