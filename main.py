@@ -1,6 +1,7 @@
 from gui import Display
 from goal import get_goal
 import pygame
+import random
 
 def main():
     lines = []
@@ -8,7 +9,7 @@ def main():
         lines = f.readlines()
     for i in range(len(lines)):
         lines[i] = lines[i].replace("\n", "")
-    starting = get_goal(4,7,lines)
+    starting = get_goal(4,random.randint(7, 14),lines)
     GUI = Display(starting[0], starting[1])
     running = True
     clock = pygame.time.Clock()

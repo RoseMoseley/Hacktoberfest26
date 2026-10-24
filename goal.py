@@ -16,11 +16,14 @@ def get_goal(option_size:int,recursive_count:int,all_words:list[str])->tuple[lis
     print(f"Goal:",end=" ")
     current_item = items[0]
     new_item = ""
+    path: list[str] = []
     for i in range(recursive_count):
+        path.append(current_item)
         new_item = merger.merge_items(current_item,random.choice(used_items))
         current_item = new_item
-        items.append(current_item)
+        used_items.append(current_item)
     print(f"items:{items}\ngoal:{current_item}\n====")
+    print(f"path: {path}")
     return items,current_item
 if __name__ == "__main__":
     lines = []
