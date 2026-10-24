@@ -240,7 +240,7 @@ class Object():
         Given a pygame screen this will render the item box to it
         '''
         self._textRect.topleft = (self.__x, self.__y)
-        win.blit(self._background, self.__textRect)
+        win.blit(self._background, self._textRect)
 
     def isObjOverlappingObj(self, otherItem) -> bool:
             '''
@@ -295,7 +295,7 @@ class Button(Object):
         x, y = self.getPos()
         width, height = self.getBounds()
         if self.__alignment == "topright":
-            x -= self.getBounds()
+            x -= self.getBounds()[0]
 
         xOverlap = point[0]>=x and point[0]<=x+width
         yOverlap = point[1]>=y and point[1]<=y+height
