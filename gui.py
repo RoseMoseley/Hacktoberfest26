@@ -19,7 +19,7 @@ item node
 '''
 
 #list of colours for the gui
-COLOURS = {"bg":(255,255,255),"text":(0,0,0),"fg":(192,192,192),"fg2":(224,224,224)}
+COLOURS = {"bg":(255,255,255),"text":(0,0,0),"fg":(192,192,192),"fg2":(224,224,224),"outline":(128,128,128)}
 
 class Display():
     '''
@@ -108,10 +108,10 @@ class Display():
         for item in self.placed_items:
             item.drawItem(self.screen)
 
-        pygame.draw.rect(self.screen, COLOURS["fg2"], (self.screen.get_size()[0]-105,0,105,self.screen.get_size()[1]))
+        pygame.draw.rect(self.screen, COLOURS["fg2"], (self.screen.get_size()[0]-205,0,105,self.screen.get_size()[1]))
 
         for num, button in enumerate(self.known_items):
-            button.setPos(self.screen.get_size()[0]-100, (num-self.__scroll_count)*self.__known_item_spacing+5)
+            button.setPos(self.screen.get_size()[0]-200, (num-self.__scroll_count)*self.__known_item_spacing+5)
             button.drawItem(self.screen)
 
         for button in self.buttons:
