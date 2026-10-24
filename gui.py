@@ -120,6 +120,13 @@ class Display():
         pygame.display.update()
 
     def add_item(self, item_name):
+        found = False
+        for known in self.known_items:
+            if known.getItemName() == item_name:
+                found = True
+                break
+        if not found:
+            self.known_items.append(Button(0, 0, item_name, lambda btn: self.add_item(btn.getItemName())))
         new_item = Item(0, 0, item_name)
         self.placed_items.append(new_item)
         self.current_dragged_item = new_item
