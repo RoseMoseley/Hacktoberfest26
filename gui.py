@@ -60,27 +60,50 @@ class Item:
         self.__y: int = pos_y
         self.__item_name: str = item_name
         self.__font = pygame.font.Font("freesansbold.ttf", 32)
-        self.__textRender = self.__font.render(self.__item_name, True, (0, 0, 0), (255, 255, 255))
+        self.__textRender = self.__font.render(self.__item_name, True, (0, 0, 0), (255, 255, 255)) # TODO: change the hard coded colours to the one from the dictionary
         self.__textRect = self.__textRender.get_rect()
         self.__width = self.__textRect.width
         self.__height = self.__textRect.height
 
     def getPos(self) -> tuple[int, int]:
+        '''
+        Return a tuple of this item's position (x, y), this is the centre of the text 
+        '''
         return (self.__x, self.__y)
 
     def getItemName(self) -> str:
+        '''
+        Get the item's name, this is what should be fed into the merger
+        '''
         return self.__item_name
 
     def getBounds(self) -> tuple[int, int]:
+        '''
+        Return a tuple of this item's bounds (width, height)
+        '''
         return (self.__width, self.__height)
 
     def isItemOverlappingItem(self, otherItem) -> bool:
+        '''
+        Given another item, determins if the items are overlapping or not
+        '''
         otherX, otherY = otherItem.getPos()
         otherWidth, otherHeight = otherItem.getBounds()
-        xOverlap = self.__x+self.__width >= otherX and otherX+otherWidth >= self.__x
-        yOverlap = self.__y+self.__height >= otherY and otherY+otherHeight >= self.__y
+        xOverlap = self.__x+self.__width//2 >= otherX-otherWidth//2 and otherX+otherWidth//2 >= self.__x-self.__width//2
+        yOverlap = self.__y+self.__height//2 >= otherY-otherHeight//2 and otherY+otherHeight//2 >= self.__y-self.__height//2
         return xOverlap and yOverlap 
 
+    def isPointOverlappingItem(self, point: tuple[int, int]) -> bool:
+        '''
+        Returns if a point is overlapping the item (this should be used for checking if the mouse is on an item)
+        '''
+        xOverlap = point[0]>=self.__x-self.__width//2 and point[0]<=self.__x+self.__width//2
+        yOverlap = point[1]>=self.__y-self.__height//2 and point[1]<=self.__y+self.__height//2
+        return xOverlap and yOverlap
+
     def drawItem(self, win: pygame.Surface):
+        '''
+        Given a pygame screen this will render the item box to it
+        '''
         self.__textRect.center = (self.__x, self.__y)
         win.blit(self.__textRender, self.__textRect)
