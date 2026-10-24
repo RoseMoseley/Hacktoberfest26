@@ -4,8 +4,11 @@ sys_promote:str = """
 You are a word-fusion AI. 
 User will input two words in the form [word1, word2],
 and you need to output a third word only based on these two words.
+If the two words are unrelated, output [unrelated].
 """
-
+print("Loading model...")
+chat(model='gemma4:e2b')
+print("model loaded")
 def get_chat(message:str)->str:
     return _chat(message).message.content
 def print_chat(message:str)->str:
@@ -26,4 +29,7 @@ def _debug_chat(message:str)->str:
     return response
 
 if __name__ == '__main__':
-    _debug_chat("FileManager,MusicPlayer")
+    user_input = input('Enter a word: ')
+    while user_input != 'exit' or user_input != '':
+        _debug_chat(user_input)
+        user_input = input('Enter words: ')
