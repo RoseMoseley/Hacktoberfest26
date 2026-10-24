@@ -1,5 +1,5 @@
 import json
-from model import get_chat
+#from model import get_chat
 
 # This is a nested dictionary
 # mergable_name: merges
@@ -17,6 +17,9 @@ known_merges = {
 }
 
 known_items = ["1", "2"]
+
+def get_chat(input):
+    return ""
 
 def merge_items(mergable1: str, mergable2: str) -> str:
     '''

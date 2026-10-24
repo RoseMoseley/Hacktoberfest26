@@ -1,5 +1,6 @@
 import pygame
 from copy import copy
+from merger import merge_items
 
 '''
 main display -> pygame screen
@@ -76,6 +77,16 @@ class Display():
                         self.current_dragged_item = item
                         break
             else:
+                for item in self.placed_items:
+                    if item == self.current_dragged_item:
+                        continue
+                    if item.isObjOverlappingObj(self.current_dragged_item):
+                        merged_item_name = merge_items(item.getItemName(), self.current_dragged_item.getItemName())
+                        new_item = Item(item.getPos()[0], item.getPos()[1], merged_item_name)
+                        self.placed_items.append(new_item)
+                        self.placed_items.remove(item)
+                        self.placed_items.remove(self.current_dragged_item)
+                        break 
                 self.current_dragged_item = None # TODO: if overlapping with another item when released merge with it
         if self.current_dragged_item is not None:
             self.current_dragged_item.setPos(mousePos[0], mousePos[1])
