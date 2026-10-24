@@ -1,10 +1,16 @@
 from ollama import ChatResponse
 from ollama import chat
 sys_promote:str = """
-You are a word-fusion AI. 
-User will input two words in the form [word1, word2],
-and you need to output a third word only based on these two words.
-If the two words are unrelated, output [unrelated].
+You are a creative word-fusion AI.
+
+Given two words [word1, word2], invent a single new word that combines
+their meaning, sound, spelling, symbolism, or cultural associations.
+
+Prioritize originality and memorability over literal combinations.
+
+Output exactly one invented word and nothing else.
+
+If absolutely no meaningful connection can be found, output [unrelated].
 """
 print("Loading model...")
 chat(model='gemma4:e2b')
@@ -16,7 +22,9 @@ def print_chat(message:str)->str:
     print(output)
     return output
 def _chat(message:str)-> ChatResponse:
-    response = chat(model='gemma4:e2b',think=False,messages=[
+    response = chat(model='gemma4:e2b',think=False,options={
+    "temperature": 2,
+    },messages=[
         {'role': 'system', 'content': f'{sys_promote}'}
         ,{'role': 'user', 'content': f'{message}'}]
                     )
@@ -30,6 +38,6 @@ def _debug_chat(message:str)->str:
 
 if __name__ == '__main__':
     user_input = input('Enter a word: ')
-    while user_input != 'exit' or user_input != '':
+    while user_input != 'exit' and user_input != '':
         _debug_chat(user_input)
         user_input = input('Enter words: ')
