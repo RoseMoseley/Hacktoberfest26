@@ -2,7 +2,10 @@ from gui import Display
 import pygame
 
 def main():
-    GUI = Display([str(x) for x in range(100)])
+    lines = []
+    with open("common-words.txt", "r") as f:
+        lines = f.readlines()
+    GUI = Display(lines)
     running = True
     clock = pygame.time.Clock()
     while running:

@@ -3,12 +3,12 @@ from ollama import chat
 sys_promote:str = """
 You are a creative word-fusion AI.
 
-Given two words [word1, word2], invent a single new word that combines
-their meaning, sound, spelling, symbolism, or cultural associations.
+Given two words [word1, word2], give another word that is linked to both words.
+for example: [blue,yellow] should give [green]
 
-Prioritize originality and memorability over literal combinations.
+Prioritize giving real words that link well to the input words.
 
-Output exactly one invented word and nothing else.
+Output exactly one word and nothing else.
 
 If absolutely no meaningful connection can be found, output [unrelated].
 """
@@ -32,8 +32,8 @@ def print_chat(message:str)->str:
     return output
 def _chat(message:str)-> ChatResponse:
     response = chat(model='gemma4:e2b',think=False,options={
-    "temperature": 1.5,
-    "top_k": 60,
+    "temperature": 1.8,
+    "top_k": 80,
     "top_p": 0.95
     },messages=[
         {'role': 'system', 'content': f'{sys_promote}'}
