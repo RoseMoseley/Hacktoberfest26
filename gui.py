@@ -42,7 +42,7 @@ class Display():
 
     __known_item_spacing = 30
 
-    def __init__(self, initial:list[str]):
+    def __init__(self, initial:list[str], goal: str):
         '''
         initialisation of the dislay object
         
@@ -60,6 +60,7 @@ class Display():
         self.current_dragged_item = None
         self.holding_left_click = False
         self.holding_scroll_bar = False
+        self.goal = goal
 
         self.buttons = [Button(5,5,"Clear",lambda btn: self.clearItems())]
         for num, item_name in enumerate(initial):
@@ -68,6 +69,10 @@ class Display():
         #set the scroll amount
         self.__scroll_count = 0
         self.__scroll_bar_rect = pygame.Rect(self.screen.get_size()[0]-SCROLLBARSIZE, 0, SCROLLBARSIZE, self.screen.get_size()[1])
+
+        # goal text
+        self.goalFont = pygame.font.Font("freesansbold.ttf", 24)
+        self.hasGoal = False
 
     def clearItems(self):
         self.placed_items = []
@@ -127,6 +132,8 @@ class Display():
                         self.placed_items.append(new_item)
                         self.placed_items.remove(item)
                         self.placed_items.remove(self.current_dragged_item)
+                        if merged_item_name == self.goal:
+                            self.hasGoal = True
                         found = False
                         for known in self.known_items:
                             if known.getItemName() == merged_item_name:
@@ -159,6 +166,12 @@ class Display():
 
         for button in self.buttons:
             button.drawItem(self.screen)
+
+        self.goalFont.set_strikethrough(self.hasGoal)
+        render = self.goalFont.render(self.goal, True, COLOURS["txt"])
+        render_rect = render.get_rect()
+        render_rect.bottomleft = (0, self.screen.get_size()[1])
+        self.screen.blit(render, render_rect)
 
         pygame.draw.rect(self.screen, COLOURS["out"], self.__scroll_bar_rect)
 

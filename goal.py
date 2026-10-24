@@ -1,6 +1,6 @@
 import merger
 import random
-import model
+
 def get_goal(option_size:int,recursive_count:int,all_words:list[str])->tuple[list,list,str]:#merger.known_items):
     '''
     get the goal,required items, step to goal and the goal tuple

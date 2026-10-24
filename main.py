@@ -1,4 +1,5 @@
 from gui import Display
+from goal import get_goal
 import pygame
 
 def main():
@@ -7,7 +8,8 @@ def main():
         lines = f.readlines()
     for i in range(len(lines)):
         lines[i] = lines[i].replace("\n", "")
-    GUI = Display(lines)
+    starting = get_goal(4,7,lines)
+    GUI = Display(starting[0], starting[2])
     running = True
     clock = pygame.time.Clock()
     while running:
