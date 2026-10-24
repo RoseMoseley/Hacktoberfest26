@@ -17,7 +17,11 @@ item node
 '''
 
 #list of colours for the gui
-COLOURS = {"bg":(255,255,255)}
+COLOURS = {
+    "bg":(255,255,255),
+    "text_bg":(200,200,200),
+    "text_clr":(0, 0, 0)
+}
 
 class Display():
     '''
@@ -68,7 +72,7 @@ class Object():
         self.__y: int = pos_y
         self.__item_name: str = item_name
         self.__font = pygame.font.Font("freesansbold.ttf", 32)
-        self.__textRender = self.__font.render(self.__item_name, True, (0, 0, 0), (255, 255, 255)) # TODO: change the hard coded colours to the one from the dictionary
+        self.__textRender = self.__font.render(self.__item_name, True, COLOURS["text_clr"], COLOURS["text_bg"])
         self.__textRect = self.__textRender.get_rect()
         self.__width = self.__textRect.width
         self.__height = self.__textRect.height
