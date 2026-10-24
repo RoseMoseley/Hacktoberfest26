@@ -1,6 +1,7 @@
 import pygame
 from copy import copy
 from merger import merge_items
+from math import sqrt
 
 '''
 main display -> pygame screen
@@ -17,6 +18,9 @@ item node
     text
 
 '''
+
+def getDistance(pos1, pos2):
+    return sqrt((pos1[0]-pos2[0])**2+(pos1[1]-pos2[1])**2)
 
 #list of colours for the gui
 COLOURS = {
@@ -129,25 +133,31 @@ class Display():
                         self.current_dragged_item = item
                         break
             else:
+                best_item = None
+                item_distance = 999
                 for item in self.placed_items:
-                    if item == self.current_dragged_item:
+                    if item is self.current_dragged_item:
                         continue
                     if item.isObjOverlappingObj(self.current_dragged_item):
-                        merged_item_name = merge_items(item.getItemName(), self.current_dragged_item.getItemName())
-                        new_item = Item(item.getPos()[0], item.getPos()[1], merged_item_name)
-                        self.placed_items.append(new_item)
-                        self.placed_items.remove(item)
-                        self.placed_items.remove(self.current_dragged_item)
-                        if merged_item_name == self.goal:
-                            self.hasGoal = True
-                        found = False
-                        for known in self.known_items:
-                            if known.getItemName() == merged_item_name:
-                                found = True
-                                break
-                        if not found:
-                            self.known_items.append(Button(self.screen.get_size()[0]-SIDEBARSIZE, 0, merged_item_name, lambda btn: self.add_item(btn.getItemName()),"topright"))
-                        break 
+                        dist = getDistance((item.getPos()[0]+item.getBounds()[0]//2, item.getPos()[1]+item.getBounds()[1]//2), mousePos)
+                        if dist < item_distance:
+                            item_distance = dist
+                            best_item = item
+                if best_item is not None:
+                    merged_item_name = merge_items(best_item.getItemName(), self.current_dragged_item.getItemName())
+                    new_item = Item(item.getPos()[0], item.getPos()[1], merged_item_name)
+                    self.placed_items.append(new_item)
+                    self.placed_items.remove(best_item)
+                    self.placed_items.remove(self.current_dragged_item)
+                    if merged_item_name == self.goal:
+                        self.hasGoal = True
+                    found = False
+                    for known in self.known_items:
+                        if known.getItemName() == merged_item_name:
+                            found = True
+                            break
+                    if not found:
+                        self.known_items.append(Button(self.screen.get_size()[0]-SIDEBARSIZE, 0, merged_item_name, lambda btn: self.add_item(btn.getItemName()))) 
                 if self.current_dragged_item.getPos()[0] > self.screen.get_size()[0]-SIDEBARSIZE:
                     print("Removed")
                     self.placed_items.remove(self.current_dragged_item)
