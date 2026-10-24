@@ -52,12 +52,12 @@ class Display():
         '''
         redraw the entier screen and run pygame.display.update
         '''
-        self.screen.fill(self.colours["bg"])
+        self.screen.fill(COLOURS["bg"])
         for item in self.placed_items:
             item.drawItem(self.screen)
 
         for num, item_name in enumerate(self.known_items):
-            item = Item.init(self.screen.get_size()[0]-100, num*20+5, item_name)
+            item = Item(self.screen.get_size()[0]-100, num*20+5, item_name)
             item.drawItem(self.screen)
 
         pygame.display.update()
