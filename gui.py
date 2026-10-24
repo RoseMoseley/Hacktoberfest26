@@ -53,7 +53,7 @@ class Display():
         pygame.init()
         pygame.display.init()
         pygame.font.init()
-        self.screen = pygame.display.set_mode(size=(1028,512))
+        self.screen = pygame.display.set_mode((1028,512), pygame.RESIZABLE)
 
         self.known_items = [] # list of all items that have been discovered
         self.placed_items = []
