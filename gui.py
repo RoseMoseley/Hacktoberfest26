@@ -66,9 +66,9 @@ class Display():
         self.holding_scroll_bar = False
         self.goal = goal
 
-        self.buttons = [Button(5,5,"Clear",lambda btn: self.clearItems())]
+        self.buttons = [Button(5,5,"Clear",lambda btn: self.clearItems(), "topleft")]
         for num, item_name in enumerate(initial):
-            self.known_items.append(Button(self.screen.get_size()[0]-SIDEBARSIZE, num*20+5, item_name, lambda btn: self.add_item(btn.getItemName())))
+            self.known_items.append(Button(self.screen.get_size()[0]-SIDEBARSIZE, num*20+5, item_name, lambda btn: self.add_item(btn.getItemName()), "topright"))
 
         #set the scroll amount
         self.__scroll_count = 0
@@ -177,16 +177,16 @@ class Display():
             item.drawItem(self.screen)
 
         for num, button in enumerate(self.known_items):
-            button.setPos(self.screen.get_size()[0]-SIDEBARSIZE+5, (num-self.__scroll_count)*self.__known_item_spacing+5)
+            button.setPos(self.screen.get_size()[0]-10-SCROLLBARSIZE, (num-self.__scroll_count)*self.__known_item_spacing+5)
             button.drawItem(self.screen)
 
         for button in self.buttons:
             button.drawItem(self.screen)
 
         self.goalFont.set_strikethrough(self.hasGoal)
-        render = self.goalFont.render(self.goal, True, COLOURS["txt"])
+        render = self.goalFont.render("Goal: " + self.goal, True, COLOURS["txt"])
         render_rect = render.get_rect()
-        render_rect.bottomleft = (0, self.screen.get_size()[1])
+        render_rect.bottomleft = (5, self.screen.get_size()[1]-5)
         self.screen.blit(render, render_rect)
 
         pygame.draw.rect(self.screen, COLOURS["out"], self.__scroll_bar_rect)
@@ -214,14 +214,14 @@ class Object():
         self.__item_name: str = item_name
         self.__font = pygame.font.Font("freesansbold.ttf", 24)
         self.__textRender = self.__font.render(self.__item_name, True, COLOURS["txt"])
-        self.__textRect = self.__textRender.get_rect()
-        self.__width = self.__textRect.width
-        self.__height = self.__textRect.height
-        self.__background = pygame.Surface((self.__width+4, self.__height+4))
+        self._textRect = self.__textRender.get_rect()
+        self.__width = self._textRect.width
+        self.__height = self._textRect.height
+        self._background = pygame.Surface((self.__width+4, self.__height+4))
 
-        self.__background.fill(COLOURS["out"])
-        pygame.draw.rect(self.__background, COLOURS["bg2"], (1,1,self.__background.get_size()[0]-2, self.__background.get_size()[1]-2))
-        self.__background.blit(self.__textRender, (2,2))
+        self._background.fill(COLOURS["out"])
+        pygame.draw.rect(self._background, COLOURS["bg2"], (1,1,self._background.get_size()[0]-2, self._background.get_size()[1]-2))
+        self._background.blit(self.__textRender, (2,2))
 
     def getPos(self) -> tuple[int, int]:
         '''
@@ -249,8 +249,8 @@ class Object():
         '''
         Given a pygame screen this will render the item box to it
         '''
-        self.__textRect.topleft = (self.__x, self.__y)
-        win.blit(self.__background, self.__textRect)
+        self._textRect.topleft = (self.__x, self.__y)
+        win.blit(self._background, self.__textRect)
 
     def isObjOverlappingObj(self, otherItem) -> bool:
             '''
@@ -275,17 +275,30 @@ class Item(Object):
         super().__init__(pos_x, pos_y, item_name)
 
 class Button(Object):
-    def __init__(self, pos_x, pos_y, item_name, action):
+    def __init__(self, pos_x, pos_y, item_name, action, alignment):
         '''
         action: any function that takes a single argument which is the button that was pressed
         '''
         super().__init__(pos_x, pos_y, item_name)
         self.__action = action
+        self.__alignment = alignment
 
     def getAction(self):
         return self.__action
 
+    def drawItem(self, win: pygame.Surface):
+        '''
+        Given a pygame screen this will render the item box to it
+        '''
+        pos = self.getPos()
+        if self.__alignment == "topright":
+            self._textRect.topright = (pos[0], pos[1])
+        else:
+            self._textRect.topleft = (pos[0], pos[1])
+
+        win.blit(self._background, self._textRect)
+
 if __name__ == "__main__":
-    disp = Display([str(x) for x in range(100)])
+    disp = Display([str(x) for x in range(100)], "0")
     disp.updateAll()
     input()
