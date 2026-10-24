@@ -157,7 +157,7 @@ class Display():
                             found = True
                             break
                     if not found:
-                        self.known_items.append(Button(self.screen.get_size()[0]-SIDEBARSIZE, 0, merged_item_name, lambda btn: self.add_item(btn.getItemName()))) 
+                        self.known_items.append(Button(self.screen.get_size()[0]-SIDEBARSIZE, 0, merged_item_name, lambda btn: self.add_item(btn.getItemName()), "topleft")) 
                 if self.current_dragged_item.getPos()[0] > self.screen.get_size()[0]-SIDEBARSIZE:
                     print("Removed")
                     self.placed_items.remove(self.current_dragged_item)
