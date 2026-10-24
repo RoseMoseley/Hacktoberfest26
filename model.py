@@ -23,9 +23,9 @@ def get_chat(message:str)->str:
     return str(_chat(message).message.content)
 def print_chat(message:str)->str:
     '''
+    simular with get_chat(), but print the response to console
         :param message: the words you send to AI
         :return: The messages returns by AI
-        simular with get_chat(), but print the response to console
     '''
     output = get_chat(message)
     print(output)
