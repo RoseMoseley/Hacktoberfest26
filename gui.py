@@ -46,7 +46,8 @@ class Display():
         self.known_items = initial # list of all items that have been discovered
         self.placed_items = []
 
-        self.buttons = []
+        clear = lambda x : []
+        self.buttons = [Button(5,5,"Clear",clear)]
 
     def updateAll(self):
         '''
@@ -59,6 +60,9 @@ class Display():
         for num, item_name in enumerate(self.known_items):
             item = Item(self.screen.get_size()[0]-100, num*20+5, item_name)
             item.drawItem(self.screen)
+
+        for button in self.buttons:
+            button.drawItem(self.screen)
 
         pygame.display.update()
 
@@ -120,8 +124,6 @@ class Item(Object):
         yOverlap = point[1]>=self.__y-self.__height//2 and point[1]<=self.__y+self.__height//2
         return xOverlap and yOverlap
 
-
-
 class Button(Object):
     def __init__(self, pos_x, pos_y, item_name, action):
         super().__init__(pos_x, pos_y, item_name)
@@ -129,3 +131,8 @@ class Button(Object):
 
     def getAction(self):
         return self.__action
+
+if __name__ == "__main__":
+    disp = Display(["a","b","c"])
+    disp.updateAll()
+    input()
