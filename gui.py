@@ -102,8 +102,11 @@ class Display():
                                 found = True
                                 break
                         if not found:
-                            self.known_items.append(Button(self.screen.get_size()[0]-100, 0, merged_item_name, lambda btn: self.add_item(btn.getItemName())))
+                            self.known_items.append(Button(self.screen.get_size()[0]-SIDEBARSIZE, 0, merged_item_name, lambda btn: self.add_item(btn.getItemName())))
                         break 
+                if self.current_dragged_item.getPos()[0] > self.screen.get_size()[0]-SIDEBARSIZE:
+                    print("Removed")
+                    self.placed_items.remove(self.current_dragged_item)
                 self.current_dragged_item = None
         if self.current_dragged_item is not None:
             self.current_dragged_item.setPos(mousePos[0], mousePos[1])
@@ -113,10 +116,11 @@ class Display():
         redraw the entier screen and run pygame.display.update
         '''
         self.screen.fill(COLOURS["bg"])
-        for item in self.placed_items:
-            item.drawItem(self.screen)
 
         pygame.draw.rect(self.screen, COLOURS["fg2"], (self.screen.get_size()[0]-SIDEBARSIZE,0,SIDEBARSIZE,self.screen.get_size()[1]))
+        
+        for item in self.placed_items:
+            item.drawItem(self.screen)
 
         for num, button in enumerate(self.known_items):
             button.setPos(self.screen.get_size()[0]-SIDEBARSIZE+5, (num-self.__scroll_count)*self.__known_item_spacing+5)
