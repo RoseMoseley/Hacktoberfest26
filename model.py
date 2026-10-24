@@ -16,8 +16,17 @@ print("Loading model...")
 chat(model='gemma4:e2b')
 print("model loaded")
 def get_chat(message:str)->str:
-    return _chat(message).message.content
+    '''
+    :param message: the words you send to AI
+    :return: The response returns by AI
+    '''
+    return str(_chat(message).message.content)
 def print_chat(message:str)->str:
+    '''
+        :param message: the words you send to AI
+        :return: The messages returns by AI
+        simular with get_chat(), but print the response to console
+    '''
     output = get_chat(message)
     print(output)
     return output
@@ -29,7 +38,7 @@ def _chat(message:str)-> ChatResponse:
         ,{'role': 'user', 'content': f'{message}'}]
                     )
     return response
-def _debug_chat(message:str)->str:
+def _debug_chat(message:str)->ChatResponse:
     response = _chat(message)
     print(response.message.thinking)
     print("===")
