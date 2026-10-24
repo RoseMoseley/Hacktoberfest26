@@ -160,7 +160,7 @@ class Display():
         for button in self.buttons:
             button.drawItem(self.screen)
 
-        pygame.draw.rect(self.screen, COLOURS["scroll_bar"], self.__scroll_bar_rect)
+        pygame.draw.rect(self.screen, COLOURS["out"], self.__scroll_bar_rect)
 
         pygame.display.update()
 
