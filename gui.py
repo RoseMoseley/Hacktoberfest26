@@ -20,13 +20,13 @@ item node
 
 #list of colours for the gui
 COLOURS = {
-    "bg":(255,255,255),
-    "bg2":(248,250,252), 
-    "bg3":(241,245,249),
-    "txt":(15,23,42),
-    "out":(71,85,105),
-    "hi1":(37,99,235),
-    "hi2":(29,78,216)
+    "bg":(255,255,255), # Display window colour
+    "bg2":(248,250,252), # Object bg colour
+    "bg3":(241,245,249), # Sidebar colour
+    "txt":(15,23,42), # text colour
+    "out":(71,85,105), # Object outline
+    "hi":(37,99,235), #highlight
+    "hi2":(29,78,216) # second highlight
     }
 
 #size of the bar containing all found items
@@ -39,7 +39,7 @@ class Display():
     Has a list of discorvered nodes to be able to add
     '''
 
-    __known_item_spacing = 20
+    __known_item_spacing = 30
 
     def __init__(self, initial:list[str]):
         '''
@@ -126,7 +126,7 @@ class Display():
         for item in self.placed_items:
             item.drawItem(self.screen)
 
-        pygame.draw.rect(self.screen, COLOURS["fg2"], (self.screen.get_size()[0]-SIDEBARSIZE,0,SIDEBARSIZE,self.screen.get_size()[1]))
+        pygame.draw.rect(self.screen, COLOURS["bg3"], (self.screen.get_size()[0]-SIDEBARSIZE,0,SIDEBARSIZE,self.screen.get_size()[1]))
 
         for num, button in enumerate(self.known_items):
             button.setPos(self.screen.get_size()[0]-SIDEBARSIZE+5, (num-self.__scroll_count)*self.__known_item_spacing+5)
@@ -157,14 +157,15 @@ class Object():
         self.__y: int = pos_y
         self.__item_name: str = item_name
         self.__font = pygame.font.Font("freesansbold.ttf", 24)
-        self.__textRender = self.__font.render(self.__item_name, True, COLOURS["text"], COLOURS["fg"])
+        self.__textRender = self.__font.render(self.__item_name, True, COLOURS["txt"])
         self.__textRect = self.__textRender.get_rect()
         self.__width = self.__textRect.width
         self.__height = self.__textRect.height
-        self.__background = pygame.Surface(self.__textRect[2]+2, self.__textRect[3]+2)
+        self.__background = pygame.Surface((self.__width+2, self.__height+2))
 
-        self.__background.fill(COLOURS["fg"])
-        pygame.draw.rect(self.__background, COLOURS["outline"], (self.__background.get_size()[0]-1, self.__background.get_size()[1]-1))
+        self.__background.fill(COLOURS["out"])
+        pygame.draw.rect(self.__background, COLOURS["bg2"], (1,1,self.__background.get_size()[0]-2, self.__background.get_size()[1]-2))
+        self.__background.blit(self.__textRender, (1,1))
 
     def getPos(self) -> tuple[int, int]:
         '''
@@ -193,7 +194,7 @@ class Object():
         Given a pygame screen this will render the item box to it
         '''
         self.__textRect.topleft = (self.__x, self.__y)
-        win.blit(self.__textRender, self.__textRect)
+        win.blit(self.__background, self.__textRect)
 
     def isObjOverlappingObj(self, otherItem) -> bool:
             '''
