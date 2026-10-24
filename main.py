@@ -5,6 +5,8 @@ def main():
     lines = []
     with open("common-words.txt", "r") as f:
         lines = f.readlines()
+    for i in range(len(lines)):
+        lines[i] = lines[i].replace("\n", "")
     GUI = Display(lines)
     running = True
     clock = pygame.time.Clock()
