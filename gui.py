@@ -19,7 +19,17 @@ item node
 '''
 
 #list of colours for the gui
-COLOURS = {"bg":(255,255,255),"text":(0,0,0),"fg":(192,192,192),"fg2":(224,224,224),"outline":(128,128,128)}
+COLOURS = {
+    "bg":(255,255,255),
+    "bg2":(248,250,252), 
+    "bg3":(241,245,249),
+    "txt":(15,23,42),
+    "out":(71,85,105),
+    "hi1":(37,99,235),
+    "hi2":(29,78,216)
+    }
+
+#size of the bar containing all found items
 SIDEBARSIZE = 205
 
 class Display():
@@ -151,6 +161,10 @@ class Object():
         self.__textRect = self.__textRender.get_rect()
         self.__width = self.__textRect.width
         self.__height = self.__textRect.height
+        self.__background = pygame.Surface(self.__textRect[2]+2, self.__textRect[3]+2)
+
+        self.__background.fill(COLOURS["fg"])
+        pygame.draw.rect(self.__background, COLOURS["outline"], (self.__background.get_size()[0]-1, self.__background.get_size()[1]-1))
 
     def getPos(self) -> tuple[int, int]:
         '''
