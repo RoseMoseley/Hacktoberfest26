@@ -43,15 +43,17 @@ class Display():
         pygame.font.init()
         self.screen = pygame.display.set_mode(size=(1028,512))
 
-        self.known_items = initial # list of all items that have been discovered
+        self.known_items = [] # list of all items that have been discovered
         self.placed_items = []
         self.current_dragged_item = None
         self.holding_left_click = False
 
         self.buttons = [Button(5,5,"Clear",lambda btn: self.clearItems())]
-        for num, item_name in enumerate(self.known_items):
-            test = item_name
-            self.buttons.append(Button(self.screen.get_size()[0]-100, num*20+5, item_name, lambda btn: self.add_item(btn.getItemName())))
+        for num, item_name in enumerate(initial):
+            self.known_items.append(Button(self.screen.get_size()[0]-100, num*20+5, item_name, lambda btn: self.add_item(btn.getItemName())))
+
+        #set the scroll amount
+        self.__scroll_count = 0
 
     def clearItems(self):
         self.placed_items = []
@@ -70,6 +72,11 @@ class Display():
         if click:
             if self.current_dragged_item is None:
                 for button in self.buttons:
+                    if button.isPointOverlappingObj(mousePos):
+                        print(f"CLICKED {button.getItemName()}")
+                        button.getAction()(button)
+                        return # Upon pressing a button ignore the rest of the logic to prevent issues
+                for button in self.known_items:
                     if button.isPointOverlappingObj(mousePos):
                         print(f"CLICKED {button.getItemName()}")
                         button.getAction()(button)
@@ -93,9 +100,6 @@ class Display():
         if self.current_dragged_item is not None:
             self.current_dragged_item.setPos(mousePos[0], mousePos[1])
 
-        #set the scroll amount
-        self.__scroll_count = 0
-
     def updateAll(self):
         '''
         redraw the entier screen and run pygame.display.update
@@ -106,9 +110,9 @@ class Display():
 
         pygame.draw.rect(self.screen, COLOURS["fg2"], (self.screen.get_size()[0]-105,0,105,self.screen.get_size()[1]))
 
-        for num, item_name in enumerate(self.known_items):
-            item = Item(self.screen.get_size()[0]-100, (num-self.__scroll_count)*self.__known_item_spacing+5, item_name)
-            item.drawItem(self.screen)
+        for num, button in enumerate(self.known_items):
+            button.setPos(self.screen.get_size()[0]-100, (num-self.__scroll_count)*self.__known_item_spacing+5)
+            button.drawItem(self.screen)
 
         for button in self.buttons:
             button.drawItem(self.screen)

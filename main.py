@@ -13,6 +13,7 @@ def main():
 
             elif event.type == pygame.MOUSEWHEEL:
                 GUI.scroll(event)
+        GUI.doLogic()
         GUI.updateAll()
     pygame.quit()
 
