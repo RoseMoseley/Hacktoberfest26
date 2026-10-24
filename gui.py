@@ -40,7 +40,7 @@ class Display():
     Has a list of discorvered nodes to be able to add
     '''
 
-    __known_item_spacing = 30
+    __known_item_spacing = 32
 
     def __init__(self, initial:list[str]):
         '''
@@ -188,11 +188,11 @@ class Object():
         self.__textRect = self.__textRender.get_rect()
         self.__width = self.__textRect.width
         self.__height = self.__textRect.height
-        self.__background = pygame.Surface((self.__width+2, self.__height+2))
+        self.__background = pygame.Surface((self.__width+4, self.__height+4))
 
         self.__background.fill(COLOURS["out"])
         pygame.draw.rect(self.__background, COLOURS["bg2"], (1,1,self.__background.get_size()[0]-2, self.__background.get_size()[1]-2))
-        self.__background.blit(self.__textRender, (1,1))
+        self.__background.blit(self.__textRender, (2,2))
 
     def getPos(self) -> tuple[int, int]:
         '''
