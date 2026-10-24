@@ -19,7 +19,7 @@ known_merges = {
 known_items = ["1", "2"]
 
 def get_chat(input):
-    return ""
+    return "test"
 
 def merge_items(mergable1: str, mergable2: str) -> str:
     '''
