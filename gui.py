@@ -19,8 +19,9 @@ item node
 '''
 
 #list of colours for the gui
-COLOURS = {"bg":(255,255,255),"text":(0,0,0),"fg":(192,192,192),"fg2":(224,224,224),"outline":(128,128,128)}
+COLOURS = {"bg":(255,255,255),"text":(0,0,0),"fg":(192,192,192),"fg2":(224,224,224),"outline":(128,128,128),"scroll_bar":(0, 0, 0)}
 SIDEBARSIZE = 205
+SCROLLBARSIZE = 10
 
 class Display():
     '''
@@ -48,29 +49,49 @@ class Display():
         self.placed_items = []
         self.current_dragged_item = None
         self.holding_left_click = False
+        self.holding_scroll_bar = False
 
         self.buttons = [Button(5,5,"Clear",lambda btn: self.clearItems())]
         for num, item_name in enumerate(initial):
-            self.known_items.append(Button(self.screen.get_size()[0]-100, num*20+5, item_name, lambda btn: self.add_item(btn.getItemName())))
+            self.known_items.append(Button(self.screen.get_size()[0]-SIDEBARSIZE, num*20+5, item_name, lambda btn: self.add_item(btn.getItemName())))
 
         #set the scroll amount
         self.__scroll_count = 0
+        self.__scroll_bar_rect = pygame.Rect(self.screen.get_size()[0]-SCROLLBARSIZE, 0, SCROLLBARSIZE, self.screen.get_size()[1])
 
     def clearItems(self):
         self.placed_items = []
+
+    def isHoveringScrollbar(self, point) -> bool:
+        '''
+        Is the user hovering the scroll_bar
+        '''
+        x, y = self.__scroll_bar_rect.x, self.__scroll_bar_rect.y
+        width, height = self.__scroll_bar_rect.width, self.__scroll_bar_rect.height
+        xOverlap = point[0]>=x and point[0]<=x+width
+        yOverlap = point[1]>=y and point[1]<=y+height
+        return xOverlap and yOverlap
 
     def doLogic(self):
         '''
         This processes the logic of the game
         '''
+        self.__scroll_bar_rect = pygame.Rect(self.screen.get_size()[0]-SCROLLBARSIZE, (self.screen.get_size()[1]-5)*self.__scroll_count/(len(self.known_items) - self.screen.get_size()[1] // self.__known_item_spacing), SCROLLBARSIZE, min(max(self.screen.get_size()[1]/(len(self.known_items)*self.__known_item_spacing), 5), self.screen.get_size()[1]))
+
         mousePos = pygame.mouse.get_pos()
         click = False
         if pygame.mouse.get_pressed()[0] and not self.holding_left_click:
             self.holding_left_click = True
             click = True
+            if self.isHoveringScrollbar(mousePos):
+                self.holding_scroll_bar = True
         elif not pygame.mouse.get_pressed()[0] and self.holding_left_click:
             self.holding_left_click = False
-        if click:
+            self.holding_scroll_bar = False
+        if self.holding_scroll_bar:
+            self.__scroll_bar_rect = pygame.Rect(self.__scroll_bar_rect.x, min(max(mousePos[1], 0), self.screen.get_size()[1]-5), self.__scroll_bar_rect.width, self.__scroll_bar_rect.height)
+            self.__scroll_count = (self.__scroll_bar_rect.y/(self.screen.get_size()[1]-5))*(len(self.known_items) - self.screen.get_size()[1] // self.__known_item_spacing)
+        elif click:
             if self.current_dragged_item is None:
                 for button in self.buttons:
                     if button.isPointOverlappingObj(mousePos):
@@ -128,6 +149,8 @@ class Display():
 
         for button in self.buttons:
             button.drawItem(self.screen)
+
+        pygame.draw.rect(self.screen, COLOURS["scroll_bar"], self.__scroll_bar_rect)
 
         pygame.display.update()
 
