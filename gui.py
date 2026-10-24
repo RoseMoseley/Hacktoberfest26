@@ -22,6 +22,8 @@ class display():
     
     Has a list of discorvered nodes to be able to add
     '''
+    #list of colours for the gui
+    colours = {"bg":(255,255,255)}
     def __init__(self, initial:list[str]):
         '''
         initialisation of the dislay object
@@ -37,6 +39,18 @@ class display():
         self.known_items = initial # list of all items that have been discovered
         self.placed_items = []
 
+    def update_all(self):
+        '''
+        redraw the entier screen and run pygame.display.update
+        '''
+        self.screen.fill(self.colours["bg"])
+        for p_item in self.placed_items:
+            self.screen.blit(p_item.get_screen(), p_item.get_location()) # update to matching getters
+
+        for num, k_item in enumerate(self.known_items):
+            this_item = item.init()
+
+        pygame.display.update()
     def update(self, ): pass
 
 
