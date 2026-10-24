@@ -17,11 +17,7 @@ item node
 '''
 
 #list of colours for the gui
-COLOURS = {
-    "bg":(255,255,255),
-    "text_bg":(200,200,200),
-    "text_clr":(0, 0, 0)
-}
+COLOURS = {"bg":(255,255,255),"text":(0,0,0),"fg":(192,192,192)}
 
 class Display():
     '''
@@ -71,8 +67,8 @@ class Object():
         self.__x: int = pos_x
         self.__y: int = pos_y
         self.__item_name: str = item_name
-        self.__font = pygame.font.Font("freesansbold.ttf", 32)
-        self.__textRender = self.__font.render(self.__item_name, True, COLOURS["text_clr"], COLOURS["text_bg"])
+        self.__font = pygame.font.Font("freesansbold.ttf", 24)
+        self.__textRender = self.__font.render(self.__item_name, True, COLOURS["text"], COLOURS["fg"])
         self.__textRect = self.__textRender.get_rect()
         self.__width = self.__textRect.width
         self.__height = self.__textRect.height
@@ -99,7 +95,7 @@ class Object():
         '''
         Given a pygame screen this will render the item box to it
         '''
-        self.__textRect.center = (self.__x, self.__y)
+        self.__textRect.topleft = (self.__x, self.__y)
         win.blit(self.__textRender, self.__textRect)
 
 class Item(Object):
