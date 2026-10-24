@@ -17,11 +17,7 @@ item node
 '''
 
 #list of colours for the gui
-COLOURS = {
-    "bg":(255,255,255),
-    "text_bg":(200,200,200),
-    "text_clr":(0, 0, 0)
-}
+COLOURS = {"bg":(255,255,255),"text":(0,0,0),"fg":(192,192,192)}
 
 class Display():
     '''
@@ -46,19 +42,23 @@ class Display():
         self.known_items = initial # list of all items that have been discovered
         self.placed_items = []
 
-        self.buttons = []
+        clear = lambda x : []
+        self.buttons = [Button(5,5,"Clear",clear)]
 
     def updateAll(self):
         '''
         redraw the entier screen and run pygame.display.update
         '''
-        self.screen.fill(self.colours["bg"])
+        self.screen.fill(COLOURS["bg"])
         for item in self.placed_items:
             item.drawItem(self.screen)
 
         for num, item_name in enumerate(self.known_items):
-            item = Item.init(self.screen.get_size()[0]-100, num*20+5, item_name)
+            item = Item(self.screen.get_size()[0]-100, num*20+5, item_name)
             item.drawItem(self.screen)
+
+        for button in self.buttons:
+            button.drawItem(self.screen)
 
         pygame.display.update()
 
@@ -67,8 +67,8 @@ class Object():
         self.__x: int = pos_x
         self.__y: int = pos_y
         self.__item_name: str = item_name
-        self.__font = pygame.font.Font("freesansbold.ttf", 32)
-        self.__textRender = self.__font.render(self.__item_name, True, COLOURS["text_clr"], COLOURS["text_bg"])
+        self.__font = pygame.font.Font("freesansbold.ttf", 24)
+        self.__textRender = self.__font.render(self.__item_name, True, COLOURS["text"], COLOURS["fg"])
         self.__textRect = self.__textRender.get_rect()
         self.__width = self.__textRect.width
         self.__height = self.__textRect.height
@@ -95,7 +95,7 @@ class Object():
         '''
         Given a pygame screen this will render the item box to it
         '''
-        self.__textRect.center = (self.__x, self.__y)
+        self.__textRect.topleft = (self.__x, self.__y)
         win.blit(self.__textRender, self.__textRect)
 
 class Item(Object):
@@ -120,8 +120,6 @@ class Item(Object):
         yOverlap = point[1]>=self.__y-self.__height//2 and point[1]<=self.__y+self.__height//2
         return xOverlap and yOverlap
 
-
-
 class Button(Object):
     def __init__(self, pos_x, pos_y, item_name, action):
         super().__init__(pos_x, pos_y, item_name)
@@ -129,3 +127,8 @@ class Button(Object):
 
     def getAction(self):
         return self.__action
+
+if __name__ == "__main__":
+    disp = Display(["a","b","c"])
+    disp.updateAll()
+    input()
