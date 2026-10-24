@@ -94,7 +94,7 @@ class Display():
         scroll_bar_height = max(min(self.screen.get_size()[1]/(len(self.known_items)*self.__known_item_spacing), 1), 0)*self.screen.get_size()[1]
         self.__scroll_bar_rect = pygame.Rect(
             self.screen.get_size()[0]-SCROLLBARSIZE, 
-            (self.screen.get_size()[1]-scroll_bar_height)*self.__scroll_count/(len(self.known_items) - self.screen.get_size()[1] // self.__known_item_spacing), 
+            (self.screen.get_size()[1]-scroll_bar_height)*self.__scroll_count/max((len(self.known_items) - self.screen.get_size()[1] // self.__known_item_spacing), 1), 
             SCROLLBARSIZE, 
             scroll_bar_height
             )
