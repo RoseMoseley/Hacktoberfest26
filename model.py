@@ -32,8 +32,8 @@ def print_chat(message:str)->str:
     return output
 def _chat(message:str)-> ChatResponse:
     response = chat(model='gemma4:e2b',think=False,options={
-    "temperature": 1.4,
-    "top_k": 50,
+    "temperature": 1.5,
+    "top_k": 60,
     "top_p": 0.95
     },messages=[
         {'role': 'system', 'content': f'{sys_promote}'}
