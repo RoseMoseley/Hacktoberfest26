@@ -19,7 +19,7 @@ item node
 '''
 
 #list of colours for the gui
-COLOURS = {"bg":(255,255,255),"text":(0,0,0),"fg":(192,192,192)}
+COLOURS = {"bg":(255,255,255),"text":(0,0,0),"fg":(192,192,192),"fg2":(224,224,224)}
 
 class Display():
     '''
@@ -27,6 +27,8 @@ class Display():
     
     Has a list of discorvered nodes to be able to add
     '''
+
+    __known_item_spacing = 20
 
     def __init__(self, initial:list[str]):
         '''
@@ -91,12 +93,21 @@ class Display():
         if self.current_dragged_item is not None:
             self.current_dragged_item.setPos(mousePos[0], mousePos[1])
 
+        #set the scroll amount
+        self.__scroll_count = 0
+
     def updateAll(self):
         '''
         redraw the entier screen and run pygame.display.update
         '''
         self.screen.fill(COLOURS["bg"])
         for item in self.placed_items:
+            item.drawItem(self.screen)
+
+        pygame.draw.rect(self.screen, COLOURS["fg2"], (self.screen.get_size()[0]-105,0,105,self.screen.get_size()[1]))
+
+        for num, item_name in enumerate(self.known_items):
+            item = Item(self.screen.get_size()[0]-100, (num-self.__scroll_count)*self.__known_item_spacing+5, item_name)
             item.drawItem(self.screen)
 
         for button in self.buttons:
@@ -108,6 +119,15 @@ class Display():
         new_item = Item(0, 0, item_name)
         self.placed_items.append(new_item)
         self.current_dragged_item = new_item
+
+    def scroll(self, event:pygame.event.Event):
+        if event.type != pygame.MOUSEWHEEL:
+            return
+
+        if event.y == 1 and self.__scroll_count > 0:
+            self.__scroll_count -= 1
+        elif event.y == -1 and self.__scroll_count < len(self.known_items) - self.screen.get_size()[1] // self.__known_item_spacing:
+            self.__scroll_count += 1
 
 class Object():
     def __init__(self, pos_x: int, pos_y: int, item_name: str):
@@ -183,6 +203,6 @@ class Button(Object):
         return self.__action
 
 if __name__ == "__main__":
-    disp = Display(["a","b","c"])
+    disp = Display([str(x) for x in range(100)])
     disp.updateAll()
     input()
