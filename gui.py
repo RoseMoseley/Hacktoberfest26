@@ -17,7 +17,7 @@ item node
 '''
 
 #list of colours for the gui
-COLOURS = {"bg":(255,255,255),"text":(0,0,0),"fg":(192,192,192)}
+COLOURS = {"bg":(255,255,255),"text":(0,0,0),"fg":(192,192,192),"fg2":(224,224,224)}
 
 class Display():
     '''
@@ -52,6 +52,8 @@ class Display():
         self.screen.fill(COLOURS["bg"])
         for item in self.placed_items:
             item.drawItem(self.screen)
+
+        pygame.draw.rect(self.screen, COLOURS["fg2"], (self.screen.get_size()[0]-105,0,105,self.screen.get_size()[1]))
 
         for num, item_name in enumerate(self.known_items):
             item = Item(self.screen.get_size()[0]-100, num*20+5, item_name)
